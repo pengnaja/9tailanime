@@ -247,6 +247,67 @@ export default function Post({ ...props }) {
       />
 
       <Layer>
+        {nav_control && (
+          <div
+            className={`fixed bottom-2 left-0  z-50 w-screen  p-3 transition-all duration-300 ease-in-out delay-300 flex justify-center items-center`}
+          >
+            <div className="w-[300px] h-[50px] bg-color_dark rounded-full flex items-center justify-around shadow-xl shadow-[#434343]">
+              <div className="prev">{PrevButton()}</div>
+              <div className="favorite">
+                {info.favorite ? (
+                  <FaHeart
+                    className="favorite text-site_color text-[20px] delay-1000 ease-out cursor-pointer"
+                    // onClick={handleunfavoriteclick}
+                  />
+                ) : (
+                  <FaRegHeart
+                    className="not_favorite text-site_color text-[20px] delay-1000 ease-out cursor-pointer"
+                    onClick={handlefavoriteclick}
+                  />
+                )}
+              </div>
+              <div className="home">
+                <Link href={`/`}>
+                  <FaHome className="text-color_white text-[20px] delay-1000 ease-out cursor-pointer" />
+                </Link>
+              </div>
+
+              <div className="nav__list relative">
+                {nav_ep ? (
+                  <FaTimes
+                    className="text-site_color text-[20px]  delay-1000 ease-out animate-pulse cursor-pointer"
+                    onClick={() => setNav_ep(!nav_ep)}
+                  />
+                ) : (
+                  <FaListUl
+                    className="text-color_white text-[20px] delay-1000 ease-out cursor-pointer"
+                    onClick={() => setNav_ep(!nav_ep)}
+                  />
+                )}
+                <div
+                  className={`nav__footer ${
+                    nav_ep ? "flex" : "hidden"
+                  } absolute top-[-25px] left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 md:hidden`}
+                >
+                  <FaCaretDown className="text-color_white dark:text-[#000] text-[40px] delay-1000 ease-out" />
+                </div>
+              </div>
+              <div
+                className="top"
+                onClick={() => {
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+              >
+                <FaAngleUp
+                  className="text-color_white text-[20px]  delay-1000 ease-out cursor-pointer"
+                  // create function onclick scroll to top
+                />
+              </div>
+              <div className="next">{NextButton()}</div>
+            </div>
+          </div>
+        )}
+
         <div className="container mx-auto md:max-w-[700px]">
           <div className="content w-full flex justify-center flex-col text-center">
             <div className="title my-3">
@@ -256,10 +317,13 @@ export default function Post({ ...props }) {
             </div>
             <div className="desc my-3">
               <h2 className="dark:text-color_gray px-3">
-                อ่านมังงะ มังฮวา การ์ตูนเรื่อง {props.post.pages_en}{" "}
+                ดูอนิเมะ อนิเมะซับไทย ดูการ์ตูนเรื่อง {props.post.pages_en}{" "}
                 {props.post.pages_th} ตอนที่ {props.post.posts_ep}
-                at {config.SITE_NAME} – มังงะแปลไทย
+                at {config.SITE_NAME} – อนิเมะซับไทย
               </h2>
+              <div className="simple">
+                {/* <p className="dark:text-color_gray px-3">{props.simple}</p> */}
+              </div>
             </div>
 
             <div
@@ -284,124 +348,19 @@ export default function Post({ ...props }) {
               </div>
             </div>
 
-            {nav_control && (
-              <div
-                className={`fixed bottom-2 left-0  z-50 w-screen  p-3 transition-all duration-300 ease-in-out delay-300 flex justify-center items-center`}
-              >
-                <div className="w-[300px] h-[50px] bg-color_dark rounded-full flex items-center justify-around shadow-xl shadow-[#434343]">
-                  <div className="prev">{PrevButton()}</div>
-                  <div className="favorite">
-                    {info.favorite ? (
-                      <FaHeart
-                        className="favorite text-site_color text-[20px] delay-1000 ease-out cursor-pointer"
-                        // onClick={handleunfavoriteclick}
-                      />
-                    ) : (
-                      <FaRegHeart
-                        className="not_favorite text-site_color text-[20px] delay-1000 ease-out cursor-pointer"
-                        onClick={handlefavoriteclick}
-                      />
-                    )}
-                  </div>
-                  <div className="home">
-                    <Link href={`/`}>
-                      <FaHome className="text-color_white text-[20px] delay-1000 ease-out cursor-pointer" />
-                    </Link>
-                  </div>
-
-                  <div className="nav__list relative">
-                    {nav_ep ? (
-                      <FaTimes
-                        className="text-site_color text-[20px]  delay-1000 ease-out animate-pulse cursor-pointer"
-                        onClick={() => setNav_ep(!nav_ep)}
-                      />
-                    ) : (
-                      <FaListUl
-                        className="text-color_white text-[20px] delay-1000 ease-out cursor-pointer"
-                        onClick={() => setNav_ep(!nav_ep)}
-                      />
-                    )}
-                    <div
-                      className={`nav__footer ${
-                        nav_ep ? "flex" : "hidden"
-                      } absolute top-[-25px] left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 md:hidden`}
-                    >
-                      <FaCaretDown className="text-color_white dark:text-[#000] text-[40px] delay-1000 ease-out" />
-                    </div>
-                  </div>
-                  <div
-                    className="top"
-                    onClick={() => {
-                      window.scrollTo({ top: 0, behavior: "smooth" });
-                    }}
-                  >
-                    <FaAngleUp
-                      className="text-color_white text-[20px]  delay-1000 ease-out cursor-pointer"
-                      // create function onclick scroll to top
-                    />
-                  </div>
-                  <div className="next">{NextButton()}</div>
-                </div>
-
-                {/* <div className="flex w-full justify-around items-center mt-3">
-                <div className="detail">
-                  <div className="title font-bold text-2xl dark:text-color_gray">
-                    {props.post.pages_en}
-                  </div>
-                  <div className="ep text-md dark:text-color_gray text-left">
-                    ตอนที่ {props.post.posts_ep}
-                    {""}•{""}
-                    <span>{moment(props.post.posts_create).format("LL")}</span>
-                  </div>
-                </div>
-                <div className="nav__ep flex items-center">
-                  <div className="select bg-main_bg_dark rounded-xl m-1">
-                    <FaListUl
-                      className={`text-color_white text-[40px] p-2 delay-1000 ease-out`}
-                    />
-                  </div>
-                  <div className="prv bg-main_bg_dark rounded-xl m-1">
-                    <FaArrowLeft
-                      className={`text-color_white text-[30px] p-2 delay-1000 ease-out`}
-                    />
-                  </div>
-                  <div className="next bg-main_bg_dark rounded-xl m-1">
-                    <FaArrowRight
-                      className={`text-color_white text-[30px] p-2 delay-1000 ease-out`}
-                    />
-                  </div>
-                
-                </div>
-              </div> */}
-              </div>
-            )}
-
-            <div className="reading relative">
-              <div className="scroll__progress__bar">
-                <ProgressBar color="#6c2bd9" height={5} />
-              </div>
-              {props.post.posts_detail.map((images: any, i: number) => {
-                return (
-                  <div
-                    className="w-full"
-                    key={i}
-                    onClick={() => setNav_control(!nav_control)}
-                  >
-                    <Image
-                      src={`${config.CDN_URL}${images.url}`}
-                      width={2000}
-                      height={1000}
-                      quality={100}
-                      alt={`${images.alt}`}
-                      title={`${images.alt}`}
-                      style={{
-                        width: "100%",
-                        height: "auto",
-                      }}
-                    />
-                  </div>
-                );
-              })}
+            <div className="reading relative md:min-h-[400px] w-auto min-h-[180px] flex justify-center items-center">
+              <iframe
+                width="100%"
+                height="100%"
+                src="https://short.ink/yvAkL66u5"
+                frameBorder="0"
+                scrolling="0"
+                allowFullScreen
+                className="md:w-full md:min-h-[400px] w-full min-h-[180px] px-3"
+              ></iframe>
+            </div>
+            <div className="scroll__progress__bar">
+              <ProgressBar color="#6c2bd9" height={5} />
             </div>
           </div>
 

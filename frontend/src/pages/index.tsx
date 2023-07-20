@@ -14,12 +14,14 @@ import Popular from "../../components/Popular";
 export default function Home({ ...props }) {
   // const Poster = React.lazy(() => import("../../components/Poster"));
   // const Popular = React.lazy(() => import("../../components/Popular"));
-
+  const FB_page = React.lazy(() => import("../../components/FB_page"));
   const [currentPage, setCurrentPage] = useState(1); // หน้าปัจจุบัน
   const [itemsPerPage, setItemsPerPage] = useState(10); // จำนวนรายการต่อหน้า
   const [totalPages, setTotalPages] = useState(0); // จำนวนหน้าทั้งหมด
   const [displayedPages, setDisplayedPages] = useState([]); // รายการหน้าที่จะแสดงในหน้าปัจจุบัน
   const router = useRouter();
+
+  //! facebook_page
 
   //! is mobile ? show 10 : show 20
   useEffect(() => {
@@ -174,31 +176,10 @@ export default function Home({ ...props }) {
                 </h2>
               </div>
 
-              <div
-                id="fb-root"
-                className="w-full flex justify-center items-center"
-              >
-                <div
-                  className="fb-page w-full flex justify-center items-center"
-                  data-href="https://www.facebook.com/9tailmanga"
-                  data-colorscheme="dark"
-                  data-tabs=""
-                  data-width="500"
-                  data-height=""
-                  data-small-header="false"
-                  data-adapt-container-width="true"
-                  data-hide-cover="false"
-                  data-show-facepile="true"
-                >
-                  <blockquote
-                    cite="https://www.facebook.com/9tailmanga"
-                    className="fb-xfbml-parse-ignore"
-                  >
-                    <a href="https://www.facebook.com/9tailmanga">
-                      9Tail Manga
-                    </a>
-                  </blockquote>
-                </div>
+              <div className="fb_page relative min-h-[100px]">
+                <Suspense fallback={<Loading />}>
+                  <FB_page />
+                </Suspense>
               </div>
             </div>
           </section>

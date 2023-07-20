@@ -164,30 +164,6 @@ export default function Page({ ...props }: any) {
                       id="ep_list"
                     >
                       {props.res_ep.map((item: any, index: number) => {
-                        // return (
-                        //   <li
-                        //     key={index}
-                        //     className="bg-header_bg_dark m-2 p-2 rounded-md hover:bg-site_color hover:text-color_white"
-                        //   >
-                        //     <Link href="/">
-                        //       <div
-                        //         className={`ep_container  flex gap-5 text-site_color hover:text-color_white`}
-                        //       >
-                        //         <div className="ep_icon text-2xl font-bold flex justify-center items-center bg-pages_bg_bookopen p-4 rounded-md">
-                        //           <FaBookOpen className="text-md" />
-                        //         </div>
-                        //         <div className="ep_text">
-                        //           <div className="text-xl ">
-                        //             <p className="">ตอนที่{item.posts_ep}</p>
-                        //           </div>
-                        //           <div className="ep_date">
-                        //             <p className="text-sm">{item.posts_create}</p>
-                        //           </div>
-                        //         </div>
-                        //       </div>
-                        //     </Link>
-                        //   </li>
-                        // );
                         return (
                           <li
                             key={index}
