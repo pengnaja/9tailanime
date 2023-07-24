@@ -495,4 +495,16 @@ async function setUpdate_View_Follow() {
   }
 }
 
+router.get("/get_video/", async (req, res) => {
+  axios.get('https://partyanime.com/?v=zDo0bfSeV')
+  .then(response => {
+    // สำเร็จ: ข้อมูลถูกดึงมาจาก URL
+    console.log(response.data);
+  })
+  .catch(error => {
+    // เกิดข้อผิดพลาดในการดึงข้อมูล
+    console.error('Error fetching data:', error);
+  });
+});
+
 module.exports = router;
