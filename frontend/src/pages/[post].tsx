@@ -341,33 +341,19 @@ export default function Post({ ...props }) {
                 </div>
               </div>
             )}
-
-            <div className="reading relative">
-              <div className="scroll__progress__bar">
-                <ProgressBar color="#6c2bd9" height={5} />
-              </div>
-              {props.post.posts_detail.map((images: any, i: number) => {
-                return (
-                  <div
-                    className="w-full"
-                    key={i}
-                    onClick={() => setNav_control(!nav_control)}
-                  >
-                    <Image
-                      src={`${config.CDN_URL}${images.url}`}
-                      width={2000}
-                      height={1000}
-                      quality={100}
-                      alt={`${images.alt}`}
-                      title={`${images.alt}`}
-                      style={{
-                        width: "100%",
-                        height: "auto",
-                      }}
-                    />
-                  </div>
-                );
-              })}
+                  <div className="reading relative md:min-h-[400px] w-auto min-h-[180px] flex justify-center items-center">
+              <iframe
+                width="100%"
+                height="100%"
+                src="https://short.ink/zDo0bfSeV"
+                frameBorder="0"
+                scrolling="0"
+                allowFullScreen
+                className="md:min-h-[400px] w-full min-h-[180px] px-3"
+              ></iframe>
+            </div>
+            <div className="scroll__progress__bar">
+              <ProgressBar color="#6c2bd9" height={5} />
             </div>
           </div>
 

@@ -13,7 +13,7 @@ const { sendWebhookMessageServer } = require('../middleware/discord_hook');
 
 //! domain.com/pages/
 router.get("/pages/", async (req, res) => {
-  let redis_key = "9tailmanga:public:pages";
+  let redis_key = "9tailanime:public:pages";
   let redis_res = await redisclient.get(redis_key);
   if (redis_res) {
     res.status(200).json(JSON.parse(redis_res));
@@ -39,7 +39,7 @@ router.get("/pages/", async (req, res) => {
 });
 
 router.get("/last_updated", async (req, res) => {
-  let redis_key = "9tailmanga:public:last_updated";
+  let redis_key = "9tailanime:public:last_updated";
   let redis_res = await redisclient.get(redis_key);
   if (redis_res) {
     res.status(200).json(JSON.parse(redis_res));
@@ -50,7 +50,7 @@ router.get("/last_updated", async (req, res) => {
 });
 
 router.get("/sitemap/pages/slug", async (req, res) => {
-  let redis_key = "9tailmanga:public:/sitemap/pages/slug";
+  let redis_key = "9tailanime:public:/sitemap/pages/slug";
   let redis_res = await redisclient.get(redis_key);
   if (redis_res) {
     res.status(200).json(JSON.parse(redis_res));
@@ -81,7 +81,7 @@ router.get("/sitemap/pages/slug", async (req, res) => {
 });
 
 router.get("/sitemap/tags/slug", async (req, res) => {
-  let redis_key = "9tailmanga:public:/sitemap/tags/slug";
+  let redis_key = "9tailanime:public:/sitemap/tags/slug";
   let redis_res = await redisclient.get(redis_key);
   if (redis_res) {
     res.status(200).json(JSON.parse(redis_res));
@@ -112,7 +112,7 @@ router.get("/sitemap/tags/slug", async (req, res) => {
 });
 
 router.get("/sitemap/posts/slug", async (req, res) => {
-  let redis_key = "9tailmanga:public:/sitemap/posts/slug";
+  let redis_key = "9tailanime:public:/sitemap/posts/slug";
   let redis_res = await redisclient.get(redis_key);
   if (redis_res) {
     res.status(200).json(JSON.parse(redis_res));
@@ -166,7 +166,7 @@ router.get("/search/:slug", async (req, res) => {
 
 //! domain.com/pages/:slug
 router.get("/pages/:slug", async (req, res) => {
-  let redis_key = `9tailmanga:public:pages/${req.params.slug}`;
+  let redis_key = `9tailanime:public:pages/${req.params.slug}`;
   let redis_res = await redisclient.get(redis_key);
   if (redis_res) {
     res.status(200).json(JSON.parse(redis_res));
@@ -268,7 +268,7 @@ router.get("/pages/:slug", async (req, res) => {
 });
 
 router.get("/posts/:slug", async (req, res) => {
-  let redis_key = `9tailmanga:public:posts/${req.params.slug}`;
+  let redis_key = `9tailanime:public:posts/${req.params.slug}`;
   let redis_res = await redisclient.get(redis_key);
   if (redis_res) {
     res.status(200).json(JSON.parse(redis_res));
@@ -300,7 +300,7 @@ router.get("/posts/:slug", async (req, res) => {
 });
 
 router.get("/tags/:slug", async (req, res) => {
-  let redis_key = `9tailmanga:public:tags/${req.params.slug}`;
+  let redis_key = `9tailanime:public:tags/${req.params.slug}`;
   let redis_res = await redisclient.get(redis_key);
   if (redis_res) {
     res.status(200).json(JSON.parse(redis_res));
@@ -332,7 +332,7 @@ router.get("/tags/:slug", async (req, res) => {
 });
 
 router.get("/pages/add_follow/:slug", async (req, res) => {
-  let redis_key = `9tailmanga:state_wait_update:status_view_follow`;
+  let redis_key = `9tailanime:state_wait_update:status_view_follow`;
   let redis_res = await redisclient.get(redis_key);
   let pages_slug = req.params.slug;
   if (redis_res) {
@@ -376,7 +376,7 @@ router.get("/pages/add_follow/:slug", async (req, res) => {
 })();
 
 async function Update_view(slug) {
-  let redis_key = `9tailmanga:state_wait_update:status_view_follow`;
+  let redis_key = `9tailanime:state_wait_update:status_view_follow`;
   let redis_res = await redisclient.get(redis_key);
   let pages_slug = slug;
   if (redis_res) {
@@ -409,7 +409,7 @@ async function Update_view(slug) {
 };
 
 async function getLastUpdatedReload() {
-  let redis_key = "9tailmanga:public:last_updated";
+  let redis_key = "9tailanime:public:last_updated";
   pool.query(
     "SELECT pages.pages_slug,pages.pages_thumbnail,pages.pages_title,pages.pages_en,pages.pages_last_update,pages.pages_type,pages.pages_last_ep,posts.posts_slug FROM posts INNER JOIN pages ON posts.pages_id = pages.pages_id where posts.posts_ep=pages.pages_last_ep ORDER BY pages.pages_last_update DESC LIMIT 100;",
     async (err, result) => {
@@ -432,7 +432,7 @@ async function getLastUpdatedReload() {
 }
 
 async function getTagsPopular() {
-  let redis_key = `9tailmanga:public:tags/popular`;
+  let redis_key = `9tailanime:public:tags/popular`;
   pool.query(
     "SELECT pages.pages_slug,pages.pages_simple,pages.pages_thumbnail,pages.pages_title,pages.pages_en,pages.pages_th,pages.pages_last_update,pages.pages_type,pages.pages_last_ep,posts.posts_slug,tags.tags_slug,tags.tags_name FROM posts INNER JOIN pages ON posts.pages_id = pages.pages_id INNER JOIN pages_tags ON pages.pages_id = pages_tags.pages_id INNER JOIN tags ON pages_tags.tags_id=tags.tags_id  where posts.posts_ep=pages.pages_last_ep and tags.tags_slug=? ORDER BY pages.pages_last_update DESC;",
     ["popular"],
@@ -456,7 +456,7 @@ async function getTagsPopular() {
 }
 
 async function setUpdate_View_Follow() {
-  let redis_key = "9tailmanga:state_wait_update:status_view_follow";
+  let redis_key = "9tailanime:state_wait_update:status_view_follow";
   let redis_res = await redisclient.get(redis_key);
   let count = 0;
   if(redis_res){
@@ -480,7 +480,7 @@ async function setUpdate_View_Follow() {
               // console.log(count , lengthOfData);
               if(count === lengthOfData){
                 await redis_server.set(redis_key, {});
-                console.log({ message: "State Update Key !!9tailmanga:state_wait_update:status_view_follow!! Success" });
+                console.log({ message: "State Update Key !!9tailanime:state_wait_update:status_view_follow!! Success" });
               }
             }
           } catch (err) {
@@ -491,7 +491,7 @@ async function setUpdate_View_Follow() {
       );
       }
   }else{
-    console.log({ message: "State Update Key !!9tailmanga:state_wait_update:status_view_follow!! Not Found" });
+    console.log({ message: "State Update Key !!9tailanime:state_wait_update:status_view_follow!! Not Found" });
   }
 }
 

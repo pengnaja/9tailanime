@@ -25,7 +25,7 @@ const uploads_pages = multer({
   storage: multerS3({
     s3: s3,
     acl: "public-read",
-    bucket: "container-uploads-storage/uploads",
+    bucket: "container-uploads-storage/thumbnails",
     contentType: multerS3.AUTO_CONTENT_TYPE,
     key: function (req, file, cb) {
       console.log(file.mimetype);
@@ -54,7 +54,7 @@ const uploads_posts = multer({
   storage: multerS3({
     s3: s3,
     acl: "public-read",
-    bucket: "container-uploads-storage/uploads",
+    bucket: "container-uploads-storage/thumbnails",
     contentType: multerS3.AUTO_CONTENT_TYPE,
     key: function (req, file, cb) {
       console.log(file.mimetype);

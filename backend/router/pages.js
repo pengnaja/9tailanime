@@ -34,7 +34,7 @@ router.post("/:slug", async (req, res) => {
 //! domain.com/pages/uploads/pages
 router.post('/uploads/pages',uploads.uploads_pages, function (req, res, next) {
   console.log('File uploaded successfully.');
-  const path = `uploads/${req.files[0].key}`
+  const path = `thumbnails/${req.files[0].key}`
   if(path.length > 8) {
     pool.query(`INSERT INTO img_found (url) values (?)`,path, async (err, result_img_found) => {
       try {

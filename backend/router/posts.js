@@ -44,7 +44,7 @@ router.post("/uploads/posts", uploads.uploads_posts, async function (req, res) {
   let jsonimg = [];
   let insert_to_db = [];
   for (i in req.files) {
-    let name = await `uploads/${req.files[i].key}`;
+    let name = await `thumbnails/${req.files[i].key}`;
     await jsonimg.push({ url: name, image_no: Number(i) + 1 });
     await insert_to_db.push([name]);
   }

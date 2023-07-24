@@ -2,7 +2,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
 require("dotenv").config();
-const allowlist = ["load.9tailmanga.com", "9tailmanga.com"];
+const allowlist = ["load.9tailanime.com", "f.9tailanime.com"];
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   // ตรวจสอบว่าโดเมนของผู้ใช้อยู่ใน allowlist

@@ -17,11 +17,7 @@ interface Posts {
   posts_slug: string;
   pages_slug: string;
   posts_ep: number;
-  posts_detail: Post_detail[];
-}
-interface Post_detail {
-  url: string;
-  image_no: number;
+  posts_detail: string;
 }
 
 export default function create_posts({ ...props }) {
@@ -31,7 +27,7 @@ export default function create_posts({ ...props }) {
     posts_slug: "",
     pages_slug: "",
     posts_ep: 0,
-    posts_detail: [],
+    posts_detail: "",
   });
   const [filesArray, setFilesArray] = useState<any[]>([]);
 
@@ -42,66 +38,7 @@ export default function create_posts({ ...props }) {
     });
   }, [router.query.posts_slug]);
 
-  const handleUpload = async () => {
-    if (filesArray.length) {
-      const formData = new FormData();
-      for (let i = 0; i < filesArray.length; i++) {
-        formData.append("uploads_posts_images", filesArray[i]);
-      }
 
-      try {
-        MySwal.fire({
-          title: "กำลังอัพโหลดรูปภาพ",
-          timerProgressBar: true,
-
-          showConfirmButton: false,
-          didOpen: () => {
-            MySwal.showLoading();
-          },
-        });
-        const res = await axios_client.post(`posts/uploads/posts`, formData);
-        MySwal.close();
-        popup.success("อัพโหลดรูปภาพสำเร็จแล้ว", "");
-        setCreate_posts({
-          ...create_posts,
-          posts_detail: res.data,
-        });
-        console.log(create_posts);
-      } catch (err: any) {
-        console.log(`pages/create/index` + err.response);
-        if (err.response === undefined) {
-          popup.warning("ขนาดไฟล์ Size ใหญ่เกินไป", "");
-        } else {
-          popup.warning(
-            "อัพโหลดรูปภาพไม่สำเร็จ กรุณาอัพโหลดไฟล์ .PNG .WEBP .GIF",
-            ""
-          );
-        }
-      }
-    } else {
-      popup.warning("กรุณาเลือกไฟล์ที่ต้องการอัพโหลด", "");
-    }
-  };
-
-  const handleFileEvent = (e: ChangeEvent<HTMLInputElement>) => {
-    if (create_posts.posts_detail.length == 0) {
-      if (e.target.files) {
-        setFilesArray(Array.from(e.target.files));
-      }
-    } else {
-      console.log(create_posts.posts_detail);
-      try {
-        axios_client.post(`/posts/uploads/delete`, create_posts.posts_detail);
-      } catch (err: any) {
-        console.log(`pages/uploads/delete` + err);
-      }
-      if (e.target.files) {
-        setFilesArray(Array.from(e.target.files));
-      }
-
-      popup.success("ลบรูปภาพเก่าเรียบร้อยแล้ว", "");
-    }
-  };
 
   const handleSubmid = async () => {
     console.log(create_posts);
@@ -189,77 +126,22 @@ export default function create_posts({ ...props }) {
           <h2 className="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
             Create Posts_detail
           </h2>
-          <div className="px-4 py-3 bg-white rounded-lg shadow-md dark:bg-gray-800 my-3">
-            <div className="my-2 flex flex-row items-center gap-5">
-              <span className="text-gray-700 dark:text-gray-400 text-sm">
-                1
+          <div className="px-4 py-3 bg-white rounded-lg shadow-md dark:bg-gray-800">
+            <div className="my-2">
+              <span className="text-gray-700 dark:text-gray-400 mt-4 text-sm">
+                posts_slug | Exapmle : one-pice-ตอนที่-1
               </span>
 
               <input
-                type="file"
-                className="block my-5 text-xs text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 p-3 "
-                multiple
-                id="fileUpload"
-                accept="image/gif,image/webp, image/png"
-                onChange={handleFileEvent}
+                className="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+                required
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setCreate_posts({
+                    ...create_posts,
+                    posts_detail: e.target.value,
+                  });
+                }}
               />
-              <button
-                className="p-4 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
-                onClick={handleUpload}
-              >
-                Upload
-              </button>
-            </div>
-            <div className="uploaded-files-list flex gap-10  flex-wrap justify-center">
-              {create_posts.posts_detail.length === 0 ? (
-                <>
-                  <div className="text-gray-700 dark:text-gray-400 text-sm">
-                    <p className="text-2xl">กรุณาอัพโหลดรูปภาพ</p>
-                  </div>
-                  {/* <div className="flex flex-warp flex-col relative h-[500px] w-auto">
-                    <Image
-                      className="w-full h-full block"
-                      src={`https://sv3.9tailmanga.com/uploads/499675fd86a1cb32a50ca57b56ad7e.webp`}
-                      alt=""
-                      object-fit="cover"
-                      width={500}
-                      height={500}
-                    />
-                  </div> */}
-                </>
-              ) : (
-                create_posts.posts_detail.map((item: any, index: number) => (
-                  <div
-                    className="flex flex-warp flex-col relative h-[500px] w-auto"
-                    key={index}
-                    style={{ height: "500px", width: "auto" }}
-                  >
-                    <Image
-                      className="w-full h-full block"
-                      src={`https://sv3.9tailmanga.com/${item.url}`}
-                      alt=""
-                      object-fit="cover"
-                      width={500}
-                      height={500}
-                      quality={1}
-                      // priority={true}
-                    />
-                    <span className="text-gray-700 dark:text-gray-400 text-xl text-center">
-                      {item.image_no}
-                    </span>
-                  </div>
-                  // <div className="flex flex-warp flex-col" key={index}>
-                  //   <img
-                  //     className="h-[500px]  object-cover"
-                  //     src={`https://sv3.9tailmanga.com/${item.url}`}
-                  //     alt=""
-                  //   />
-                  //   <span className="text-gray-700 dark:text-gray-400 text-xl text-center">
-                  //     {item.image_no}
-                  //   </span>
-                  // </div>
-                ))
-              )}
             </div>
             <div className="my-2">
               <button

@@ -85,7 +85,7 @@ export default function App({ Component, pageProps }: AppProps) {
         defer
       />
 
-      <Script
+      {/* <Script
         strategy="lazyOnload"
         id="google-analytics"
         src={`https://www.googletagmanager.com/gtag/js?id=G-ECB84G2QBM`}
@@ -100,9 +100,9 @@ export default function App({ Component, pageProps }: AppProps) {
             page_path: window.location.pathname,
     });
   `}
-      </Script>
+      </Script> */}
 
-      <Script id="onesignal-custom-script" strategy="lazyOnload">
+      {/* <Script id="onesignal-custom-script" strategy="lazyOnload">
         {`
           var OneSignal = window.OneSignal || [];
           OneSignal.push(function() {
@@ -112,7 +112,7 @@ export default function App({ Component, pageProps }: AppProps) {
              OneSignal.showNativePrompt();
           });
         `}
-      </Script>
+      </Script> */}
       <Head>
         <meta
           name="google-site-verification"

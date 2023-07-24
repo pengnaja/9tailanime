@@ -3,11 +3,11 @@ import { NextApiRequest, NextApiResponse } from "next";
 require("dotenv").config();
 
 const allowlist = [
-  "load.9tailmanga.com",
+  "load.9tailanime.com",
   "localhost:3000",
   "http://localhost:3000",
-  "9tailmanga.com",
-  "https://9tailmanga.com",
+  "f.9tailanime.com",
+  "https://f.9tailanime.com",
 ];
 
 export default async function handler(

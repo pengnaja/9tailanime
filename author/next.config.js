@@ -3,9 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
   images: {
     domains: [
-      "localhost",
-      "rose-manga.com",
-      "load.9tailmanga.com",
+      "load.9tailanime.com",
       "sv3.9tailmanga.com",
     ],
     // minimumCacheTTL: 60,
