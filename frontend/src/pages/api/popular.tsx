@@ -23,7 +23,7 @@ export default async function handler(
   }
   if (req.method === "POST") {
     try {
-      const response = await axios.get( `${process.env.API_URL}public/tags/popular/`);
+      const response = await axios.get(`${process.env.API_URL}public/tags/popular/`);
       const data = response.data;
       res.status(200).json(data);
     } catch (error) {

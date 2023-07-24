@@ -4,9 +4,7 @@ const config = {
   // API_URL: "http://localhost:7777/",
   // API_FRONT: "http://localhost:3000/api/",
   API_FRONT: "https://9tailmanga.com/api/",
-
   CDN_URL: "https://sv3.9tailmanga.com/",
-
   SITE_URL: "https://9tailmanga.com/",
   SITE_NAME: "9Tail Manga",
   SITE_DOMAIN: "9TailManga.com",

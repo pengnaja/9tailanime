@@ -1,12 +1,8 @@
 // frontend/src/pages/api/search/[search].tsx
 import { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
-const allowlist = [
-  "load.9tailmanga.com",
-  "localhost:3000",
-  "9tailmanga.com",
-  "https://9tailmanga.com",
-];
+require("dotenv").config();
+const allowlist = ["load.9tailmanga.com", "9tailmanga.com"];
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   // ตรวจสอบว่าโดเมนของผู้ใช้อยู่ใน allowlist
@@ -27,9 +23,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     try {
-      // ดึงข้อมูลจาก https://load.9tailmanga.com/public/search/${search}
       const fetch_search = await axios.get(
-        `https://load.9tailmanga.com/public/search/${search}`
+        `${process.env.API_URL}public/search/${search}`
       );
       const searchResult = fetch_search.data;
 

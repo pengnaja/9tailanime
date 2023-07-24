@@ -10,18 +10,17 @@ import { useRouter } from "next/router";
 import Loading from "../../components/Loading";
 import React from "react";
 import Popular from "../../components/Popular";
-
+import FB_page from "../../components/FB_page";
 export default function Home({ ...props }) {
-  // const Poster = React.lazy(() => import("../../components/Poster"));
+  const Poster = React.lazy(() => import("../../components/Poster"));
   // const Popular = React.lazy(() => import("../../components/Popular"));
-  const FB_page = React.lazy(() => import("../../components/FB_page"));
+  // const FB_page = React.lazy(() => import("../../components/FB_page"));
+
   const [currentPage, setCurrentPage] = useState(1); // หน้าปัจจุบัน
   const [itemsPerPage, setItemsPerPage] = useState(10); // จำนวนรายการต่อหน้า
   const [totalPages, setTotalPages] = useState(0); // จำนวนหน้าทั้งหมด
   const [displayedPages, setDisplayedPages] = useState([]); // รายการหน้าที่จะแสดงในหน้าปัจจุบัน
   const router = useRouter();
-
-  //! facebook_page
 
   //! is mobile ? show 10 : show 20
   useEffect(() => {
@@ -177,9 +176,7 @@ export default function Home({ ...props }) {
               </div>
 
               <div className="fb_page relative min-h-[100px]">
-                <Suspense fallback={<Loading />}>
-                  <FB_page />
-                </Suspense>
+                <FB_page />
               </div>
             </div>
           </section>
@@ -194,23 +191,24 @@ export default function Home({ ...props }) {
                 </h3>
               </div>
               <div className="update_new-content grid grid-cols-2  md:grid-cols-3 gap-1  lg:grid-cols-5 relative min-h-[200px]">
-                {/* <Suspense fallback={<Loading />}></Suspense> */}
-                {displayedPages.map((pages: any, i: number) => {
-                  return (
-                    <Poster
-                      key={i}
-                      i={i}
-                      pages_slug={pages.pages_slug}
-                      pages_last_update={pages.pages_last_update}
-                      pages_last_ep={pages.pages_last_ep}
-                      pages_en={pages.pages_en}
-                      pages_type={pages.pages_type}
-                      pages_title={pages.pages_title}
-                      pages_thumbnail={pages.pages_thumbnail}
-                      posts_slug={pages.posts_slug}
-                    />
-                  );
-                })}
+                <Suspense fallback={<Loading />}>
+                  {displayedPages.map((pages: any, i: number) => {
+                    return (
+                      <Poster
+                        key={i}
+                        i={i}
+                        pages_slug={pages.pages_slug}
+                        pages_last_update={pages.pages_last_update}
+                        pages_last_ep={pages.pages_last_ep}
+                        pages_en={pages.pages_en}
+                        pages_type={pages.pages_type}
+                        pages_title={pages.pages_title}
+                        pages_thumbnail={pages.pages_thumbnail}
+                        posts_slug={pages.posts_slug}
+                      />
+                    );
+                  })}
+                </Suspense>
               </div>
               <div className="pagination">
                 <div className="w-full">

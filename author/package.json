@@ -1,0 +1,40 @@
+{
+  "name": "author",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3001",
+    "build": "next build",
+    "start": "next start -p 3001",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@tailwindui/react": "^0.1.1",
+    "@types/node": "20.2.1",
+    "@types/react": "18.2.6",
+    "@types/react-dom": "18.2.4",
+    "axios": "^1.4.0",
+    "chart.js": "^3.9.1",
+    "dotenv": "^16.1.4",
+    "js-cookie": "^3.0.5",
+    "moment": "^2.29.4",
+    "moment-timezone": "^0.5.43",
+    "next": "13.4.9",
+    "nextjs-progressbar": "^0.0.16",
+    "react": "18.2.0",
+    "react-chartjs-2": "^4.3.1",
+    "react-data-table-component": "^7.5.3",
+    "react-dom": "18.2.0",
+    "react-icons": "^4.8.0",
+    "react-select": "^5.7.3",
+    "sharp": "^0.32.1",
+    "sweetalert2": "^11.7.12",
+    "sweetalert2-react-content": "^5.0.7",
+    "typescript": "5.0.4"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.14",
+    "postcss": "^8.4.23",
+    "tailwindcss": "^3.3.2"
+  }
+}

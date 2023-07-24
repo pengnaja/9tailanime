@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import Layer from "../../../components/Layer";
 import axios_client from "../../../config/axios_client";
+import axios from "axios";
 import Image from "next/image";
 import { FaStar, FaBookOpen, FaRegHeart, FaHeart } from "react-icons/fa";
 import Link from "next/link";
@@ -9,12 +10,14 @@ import config from "../../../config/config";
 import { CSSProperties } from "react";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
+import FB_comment from "../../../components/FB_comment";
 export default function Page({ ...props }: any) {
   const [info, setInfo] = useState({
     favorite: false,
   });
 
   const router = useRouter();
+  // const FB_comment = React.lazy(() => import("../../../components/FB_comment"));
 
   //! set favorite
   useEffect(() => {
@@ -34,7 +37,8 @@ export default function Page({ ...props }: any) {
     }
   }, [props.res_page.pages_slug]);
 
-  const handlefavoriteclick = () => {
+  //! onclick event favorite
+  const handlefavoriteclick = async () => {
     const favoriteStatus = localStorage.getItem("favorite");
     let favoriteData = [];
 
@@ -54,28 +58,25 @@ export default function Page({ ...props }: any) {
     }
 
     localStorage.setItem("favorite", JSON.stringify(favoriteData));
-
+    await add_point_follow();
     setInfo({
       ...info,
       favorite: !info.favorite,
     });
   };
 
-  // const handleunfavoriteclick = () => {
-  //   const favoriteStatus = localStorage.getItem("favorite");
-  //   if (favoriteStatus) {
-  //     const favoriteData = JSON.parse(favoriteStatus);
-  //     const pagesSlug = props.res_page.pages_slug;
-  //     const updatedfavoriteData = favoriteData.filter(
-  //       (favorite: any) => favorite.pages_slug !== pagesSlug
-  //     );
-  //     localStorage.setItem("favorite", JSON.stringify(updatedfavoriteData));
-  //     setInfo({
-  //       ...info,
-  //       favorite: false,
-  //     });
-  //   }
-  // };
+  const add_point_follow = async () => {
+    try {
+      let add_point = await axios.post(
+        `${config.API_FRONT}fav/${
+          props.res_page.pages_slug
+        }`
+      );
+    } catch (error) {
+      console.log(`add_point_follow` + error);
+    }
+  };
+
   //!
   return (
     <>
@@ -203,13 +204,11 @@ export default function Page({ ...props }: any) {
                         <span className="text-site_color px-2">คอมเม้น</span>
                       </p>
                     </div>
-                    <div className="comments bg-color_white flex justify-center items-center py-3">
-                      <div
-                        className="fb-comments"
-                        data-href={`https://9tailmanga.com${router.asPath}`}
-                        data-width="auto"
-                        data-numposts="3"
-                      ></div>
+                    <div className="comment relative min-h-[100px]">
+                      <FB_comment
+                        key={router.asPath}
+                        current_asPath={router.asPath}
+                      />
                     </div>
                   </div>
                 </div>
@@ -303,6 +302,14 @@ export default function Page({ ...props }: any) {
                     <span className="text-color_dark_gray dark:text-color_gray">
                       {" "}
                       {props.res_ep[0].posts_ep}
+                    </span>
+                  </li>
+                  <li>
+                    <p className="font-bold text-color_dark_gray dark:text-color_gray text-2xl">
+                      View
+                    </p>
+                    <span className="text-color_dark_gray dark:text-color_gray">
+                      {props.res_page.pages_view}
                     </span>
                   </li>
                 </ul>

@@ -1,7 +1,8 @@
-import React from "react";
+import React, { Suspense } from "react";
 import Layer from "../../components/Layer";
 import Image from "next/image";
 import axios_client from "../../config/axios_client";
+import axios from "axios";
 import config from "../../config/config";
 import ProgressBar from "react-progressbar-on-scroll";
 const popup = require("../../lib/popup");
@@ -22,6 +23,8 @@ import { useState, useEffect } from "react";
 ("next/router");
 import Link from "next/link";
 import { NextSeo } from "next-seo";
+
+import FB_comment from "../../components/FB_comment";
 export default function Post({ ...props }) {
   const [nav_ep, setNav_ep] = useState(false);
   const [nav_control, setNav_control] = useState(true);
@@ -33,6 +36,7 @@ export default function Post({ ...props }) {
   const [minPosts, setMinPosts] = useState(() => props.list_ep[0].posts_ep);
 
   const router = useRouter();
+
   useEffect(() => {
     const checkfavoritestatus = () => {
       // ตรวจสอบสถานะ favorite และทำสิ่งที่ต้องการ
@@ -105,7 +109,8 @@ export default function Post({ ...props }) {
     }
   }, [props.post]);
 
-  const handlefavoriteclick = () => {
+  //! onclick event favorite
+  const handlefavoriteclick = async () => {
     const favoriteStatus = localStorage.getItem("favorite");
     let favoriteData = [];
 
@@ -123,7 +128,7 @@ export default function Post({ ...props }) {
       // ถ้าไม่มีค่าเลยให้เพิ่มค่าเดียวเข้าไป
       favoriteData.push(props.post);
     }
-
+    await add_point_follow();
     localStorage.setItem("favorite", JSON.stringify(favoriteData));
 
     setInfo({
@@ -132,22 +137,15 @@ export default function Post({ ...props }) {
     });
   };
 
-  // const handleunfavoriteclick = () => {
-  //   const favoriteStatus = localStorage.getItem("favorite");
-  //   if (favoriteStatus) {
-  //     const favoriteData = JSON.parse(favoriteStatus);
-  //     const pagesSlug = props.post.pages_slug;
-  //     const updatedfavoriteData = favoriteData.filter(
-  //       (favorite: any) => favorite.pages_slug !== pagesSlug
-  //     );
-  //     localStorage.setItem("favorite", JSON.stringify(updatedfavoriteData));
-  //     setInfo({
-  //       ...info,
-  //       favorite: false,
-  //     });
-  //   }
-  // };
-  //!
+  const add_point_follow = async () => {
+    try {
+      let add_point = await axios.post(
+        `${config.API_FRONT}fav/${props.res_page.pages_slug}`
+      );
+    } catch (error) {
+      console.log(`add_point_follow` + error);
+    }
+  };
 
   //! update current post index
   useEffect(() => {
@@ -220,16 +218,13 @@ export default function Post({ ...props }) {
   const ep_list = () => {
     let charp_ep = props.list_ep.map((item: any, i: number) => (
       <li
-        className="nav__item  dark:text-color_white border-dashed border-b-2 border-color_gray"
-        key={item.posts_id}
+        className="nav__item  dark:text-color_white border-dashed border-b-2 border-color_gray list-none"
+        key={i}
       >
         <Link
           href={`${item.posts_slug}`}
           className="flex items-center justify-around gap-4 py-2"
         >
-          {/* <div className="no w-[50px] border-e-2 border-color_gray">
-                            {i + 1}
-                          </div> */}
           <div className="ep">ตอนที่ {item.posts_ep}</div>
           <div className="date"> {dayjs(item.posts_create).format("LL")}</div>
         </Link>
@@ -247,67 +242,6 @@ export default function Post({ ...props }) {
       />
 
       <Layer>
-        {nav_control && (
-          <div
-            className={`fixed bottom-2 left-0  z-50 w-screen  p-3 transition-all duration-300 ease-in-out delay-300 flex justify-center items-center`}
-          >
-            <div className="w-[300px] h-[50px] bg-color_dark rounded-full flex items-center justify-around shadow-xl shadow-[#434343]">
-              <div className="prev">{PrevButton()}</div>
-              <div className="favorite">
-                {info.favorite ? (
-                  <FaHeart
-                    className="favorite text-site_color text-[20px] delay-1000 ease-out cursor-pointer"
-                    // onClick={handleunfavoriteclick}
-                  />
-                ) : (
-                  <FaRegHeart
-                    className="not_favorite text-site_color text-[20px] delay-1000 ease-out cursor-pointer"
-                    onClick={handlefavoriteclick}
-                  />
-                )}
-              </div>
-              <div className="home">
-                <Link href={`/`}>
-                  <FaHome className="text-color_white text-[20px] delay-1000 ease-out cursor-pointer" />
-                </Link>
-              </div>
-
-              <div className="nav__list relative">
-                {nav_ep ? (
-                  <FaTimes
-                    className="text-site_color text-[20px]  delay-1000 ease-out animate-pulse cursor-pointer"
-                    onClick={() => setNav_ep(!nav_ep)}
-                  />
-                ) : (
-                  <FaListUl
-                    className="text-color_white text-[20px] delay-1000 ease-out cursor-pointer"
-                    onClick={() => setNav_ep(!nav_ep)}
-                  />
-                )}
-                <div
-                  className={`nav__footer ${
-                    nav_ep ? "flex" : "hidden"
-                  } absolute top-[-25px] left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 md:hidden`}
-                >
-                  <FaCaretDown className="text-color_white dark:text-[#000] text-[40px] delay-1000 ease-out" />
-                </div>
-              </div>
-              <div
-                className="top"
-                onClick={() => {
-                  window.scrollTo({ top: 0, behavior: "smooth" });
-                }}
-              >
-                <FaAngleUp
-                  className="text-color_white text-[20px]  delay-1000 ease-out cursor-pointer"
-                  // create function onclick scroll to top
-                />
-              </div>
-              <div className="next">{NextButton()}</div>
-            </div>
-          </div>
-        )}
-
         <div className="container mx-auto md:max-w-[700px]">
           <div className="content w-full flex justify-center flex-col text-center">
             <div className="title my-3">
@@ -317,19 +251,16 @@ export default function Post({ ...props }) {
             </div>
             <div className="desc my-3">
               <h2 className="dark:text-color_gray px-3">
-                ดูอนิเมะ อนิเมะซับไทย ดูการ์ตูนเรื่อง {props.post.pages_en}{" "}
+                อ่านมังงะ มังฮวา การ์ตูนเรื่อง {props.post.pages_en}{" "}
                 {props.post.pages_th} ตอนที่ {props.post.posts_ep}
-                at {config.SITE_NAME} – อนิเมะซับไทย
+                at {config.SITE_NAME} – มังงะแปลไทย
               </h2>
-              <div className="simple">
-                {/* <p className="dark:text-color_gray px-3">{props.simple}</p> */}
-              </div>
             </div>
 
             <div
               className={`${
                 nav_ep ? "fixed" : "hidden"
-              }  nav__ep flex items-start justify-center z-[30] w-screen h-[400px] border-4 border-site_color bg-color_white dark:bg-[#000] md:right-18  bottom-20 right-0 rounded-2xl transition-all duration-300 ease-in-out delay-300 `}
+              }  nav__ep flex items-start justify-center z-[30] max-w-[350px] min-w-[350px] h-[400px] border-4 border-site_color bg-color_white dark:bg-[#000] left-1/2 -translate-x-1/2  bottom-20 rounded-2xl transition-all duration-300 ease-in-out delay-300 `}
             >
               <div className="nav__content flex flex-col w-full">
                 <div className="nav__title py-2 border-b-4 border-site_color dark:text-color_white w-full relative">
@@ -343,24 +274,100 @@ export default function Post({ ...props }) {
                   className="nav__list h-[330px] overflow-x-auto"
                   id="ep_list"
                 >
-                  <ul className="">{ep_list()}</ul>
+                  <div className="">
+                    <ul>{ep_list()}</ul>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="reading relative md:min-h-[400px] w-auto min-h-[180px] flex justify-center items-center">
-              <iframe
-                width="100%"
-                height="100%"
-                src="https://short.ink/yvAkL66u5"
-                frameBorder="0"
-                scrolling="0"
-                allowFullScreen
-                className="md:w-full md:min-h-[400px] w-full min-h-[180px] px-3"
-              ></iframe>
-            </div>
-            <div className="scroll__progress__bar">
-              <ProgressBar color="#6c2bd9" height={5} />
+            {nav_control && (
+              <div
+                className={`fixed bottom-2 left-0  z-50 w-screen  p-3 transition-all duration-300 ease-in-out delay-300 flex justify-center items-center`}
+              >
+                <div className="w-[300px] h-[50px] bg-color_dark rounded-full flex items-center justify-around shadow-xl shadow-[#434343]">
+                  <div className="prev">{PrevButton()}</div>
+                  <div className="favorite">
+                    {info.favorite ? (
+                      <FaHeart
+                        className="favorite text-site_color text-[20px] delay-1000 ease-out cursor-pointer"
+                        // onClick={handleunfavoriteclick}
+                      />
+                    ) : (
+                      <FaRegHeart
+                        className="not_favorite text-site_color text-[20px] delay-1000 ease-out cursor-pointer"
+                        onClick={handlefavoriteclick}
+                      />
+                    )}
+                  </div>
+                  <div className="home">
+                    <Link href={`/`}>
+                      <FaHome className="text-color_white text-[20px] delay-1000 ease-out cursor-pointer" />
+                    </Link>
+                  </div>
+
+                  <div className="nav__list relative">
+                    {nav_ep ? (
+                      <FaTimes
+                        className="text-site_color text-[20px]  delay-1000 ease-out animate-pulse cursor-pointer"
+                        onClick={() => setNav_ep(!nav_ep)}
+                      />
+                    ) : (
+                      <FaListUl
+                        className="text-color_white text-[20px] delay-1000 ease-out cursor-pointer"
+                        onClick={() => setNav_ep(!nav_ep)}
+                      />
+                    )}
+                    <div
+                      className={`nav__footer ${
+                        nav_ep ? "flex" : "hidden"
+                      } absolute top-[-25px] left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 md:hidden`}
+                    >
+                      <FaCaretDown className="text-color_white dark:text-[#000] text-[40px] delay-1000 ease-out" />
+                    </div>
+                  </div>
+                  <div
+                    className="top"
+                    onClick={() => {
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    }}
+                  >
+                    <FaAngleUp
+                      className="text-color_white text-[20px]  delay-1000 ease-out cursor-pointer"
+                      // create function onclick scroll to top
+                    />
+                  </div>
+                  <div className="next">{NextButton()}</div>
+                </div>
+              </div>
+            )}
+
+            <div className="reading relative">
+              <div className="scroll__progress__bar">
+                <ProgressBar color="#6c2bd9" height={5} />
+              </div>
+              {props.post.posts_detail.map((images: any, i: number) => {
+                return (
+                  <div
+                    className="w-full"
+                    key={i}
+                    onClick={() => setNav_control(!nav_control)}
+                  >
+                    <Image
+                      src={`${config.CDN_URL}${images.url}`}
+                      width={2000}
+                      height={1000}
+                      quality={100}
+                      alt={`${images.alt}`}
+                      title={`${images.alt}`}
+                      style={{
+                        width: "100%",
+                        height: "auto",
+                      }}
+                    />
+                  </div>
+                );
+              })}
             </div>
           </div>
 
@@ -370,13 +377,8 @@ export default function Post({ ...props }) {
                 <span className="text-site_color px-2">คอมเม้น</span>
               </p>
             </div>
-            <div className="comments bg-color_white flex justify-center items-center py-3">
-              <div
-                className="fb-comments"
-                data-href={`https://9tailmanga.com${router.asPath}`}
-                data-width="auto"
-                data-numposts="3"
-              ></div>
+            <div className="comment relative min-h-[100px]">
+              <FB_comment key={router.asPath} current_asPath={router.asPath} />
             </div>
           </div>
         </div>
