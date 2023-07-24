@@ -371,7 +371,7 @@ router.get("/pages/add_follow/:slug", async (req, res) => {
   setUpdate_View_Follow();
   setInterval(getLastUpdatedReload, 60000);
   setInterval(getTagsPopular, 60000);
-  setInterval(setUpdate_View_Follow, 10000);
+  setInterval(setUpdate_View_Follow, 60000);
   setInterval(sendWebhookMessageServer, 3600000);
 })();
 
