@@ -345,7 +345,7 @@ export default function Post({ ...props }) {
               <iframe
                 width="100%"
                 height="100%"
-                src="https://partyanime.com/?v=YawKPXtB8"
+                src="https://short.ink/zDo0bfSeV"
                 frameBorder="0"
                 scrolling="0"
                 allowFullScreen
