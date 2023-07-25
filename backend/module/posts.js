@@ -14,7 +14,6 @@ module.exports = {
       res.status(201).json({ message: "Posts already exist" });
     }else{
     const pages_slug = req.body.pages_slug;
-    const posts_detail = req.body.posts_detail;
     delete reqbody.pages_slug;
     console.log(reqbody);
     const formatdatetime = "YYYY-MM-DD HH:mm:ss";
@@ -33,11 +32,6 @@ module.exports = {
             if (result_pages_id.length > 0) {
               reqbody.pages_id = result_pages_id[0].pages_id;
               console.log(result_pages_id);
-              for (i in reqbody.posts_detail) {
-                let alt = `${pages_slug}-ตอนที่-${reqbody.posts_ep}-${reqbody.posts_detail[i].image_no}`;
-                reqbody.posts_detail[i].alt = alt;
-              }
-              reqbody.posts_detail = JSON.stringify(reqbody.posts_detail);
               console.log(reqbody);
               pool.query(
                 `INSERT INTO posts set ?`,
@@ -67,55 +61,9 @@ module.exports = {
                                 });
                               } else {
                                 if (result_update_last_ep.changedRows > 0) {
-                                  let countcheck = 0;
-                                  console.log(posts_detail.length);
-                                  for(x in posts_detail){
-                                    let data_for = {
-                                      fk_pages_posts_id: result.insertId,
-                                      type: 2,
-                                      description: `slug->>${reqbody.posts_slug}->>posts_image_รูปที่_${posts_detail[x].image_no}_date->>${reqbody.posts_create}`,
-                                    };
-                                    console.log(data_for);
-                                    pool.query(
-                                      `UPDATE img_found set ? WHERE url = ?`,
-                                      [data_for, posts_detail[x].url],
-                                      async (err, result_img_found) => {
-                                        try {
-                                          if (err) {
-                                            console.log(
-                                              "Status Mysql Insert Error",
-                                              err
-                                            );
-                                            res.status(500).json({
-                                              message:
-                                                "Status Mysql Update img_found Error",
-                                            });
-                                          } else {
-                                            countcheck ++;
-                                            if (
-                                              result_img_found.affectedRows > 0
-                                            ) {
-                                              if (countcheck == posts_detail.length) {
-                                                res.status(200).json({
-                                                  message: "Status Create Success",
-                                                });
-                                              }
-                                            } else {
-                                              res.status(201).json({
-                                                message:
-                                                  "Status Update img_found Error",
-                                              });
-                                            }
-                                          }
-                                        } catch (err) {
-                                          console.log(err);
-                                          res.status(500).json({
-                                            message: "Internal Server Error",
-                                          });
-                                        }
-                                      }
-                                    );
-                                  }
+                                  res.status(200).json({
+                                    message: "Status Create Success",
+                                  });
                                 } else {
                                   res.status(201).json({
                                     message: "Post Update Not Found !",
@@ -163,13 +111,7 @@ module.exports = {
       res.status(201).json({ message: "Posts already exist" });
     }else{
       const formatdatetime = "YYYY-MM-DD HH:mm:ss";
-      const posts_detail = req.body.posts_detail;
       data.posts_create = moment().tz("Asia/Bangkok").format(formatdatetime);
-      for (i in data.posts_detail) {
-        let alt = `${data.posts_slug}-ตอนที่-${data.posts_ep}-${data.posts_detail[i].image_no}`;
-        data.posts_detail[i].alt = alt;
-      }
-      data.posts_detail = JSON.stringify(data.posts_detail);
       delete data.posts_id;
       pool.query(
         `UPDATE posts set ? WHERE posts_id = ?`,
@@ -196,55 +138,9 @@ module.exports = {
                           .json({ message: "Internal Mysql Pages Server Error" });
                       } else {
                         if (result.changedRows > 0) {
-                            let countcheck = 0;
-                            console.log(posts_detail.length);
-                            for(x in posts_detail){
-                              let data_for = {
-                                fk_pages_posts_id: posts_id,
-                                type: 2,
-                                description: `slug->>${data.posts_slug}->>posts_image_รูปที่_${posts_detail[x].image_no}_date->>${data.posts_create}`,
-                              };
-                              console.log(data_for);
-                              pool.query(
-                                `UPDATE img_found set ? WHERE url = ?`,
-                                [data_for, posts_detail[x].url],
-                                async (err, result_img_found) => {
-                                  try {
-                                    if (err) {
-                                      console.log(
-                                        "Status Mysql Insert Error",
-                                        err
-                                      );
-                                      res.status(500).json({
-                                        message:
-                                          "Status Mysql Update img_found Error",
-                                      });
-                                    } else {
-                                      countcheck ++;
-                                      if (
-                                        result_img_found.affectedRows > 0
-                                      ) {
-                                        if (countcheck == posts_detail.length) {
-                                          res
-                            .status(200)
-                            .json({ message: "Status Posts Update Success" });
-                                        }
-                                      } else {
-                                        res.status(201).json({
-                                          message:
-                                            "Status Update img_found Error",
-                                        });
-                                      }
-                                    }
-                                  } catch (err) {
-                                    console.log(err);
-                                    res.status(500).json({
-                                      message: "Internal Server Error",
-                                    });
-                                  }
-                                }
-                              );
-                            }
+                          res
+                          .status(200)
+                          .json({ message: "Status Posts Update Success" });
                         } else {
                           res
                             .status(201)

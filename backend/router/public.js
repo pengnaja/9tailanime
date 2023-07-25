@@ -144,7 +144,7 @@ router.get("/sitemap/posts/slug", async (req, res) => {
 
 router.get("/search/:slug", async (req, res) => {
   pool.query(
-    `SELECT pages.pages_slug,pages.pages_thumbnail,pages.pages_title,pages.pages_en,pages.pages_th,pages.pages_simple,pages.pages_last_update,pages.pages_type FROM posts INNER JOIN pages ON posts.pages_id = pages.pages_id where (posts.posts_ep=pages.pages_last_ep AND pages.pages_en LIKE '%${req.params.slug}%') OR (posts.posts_ep=pages.pages_last_ep AND pages.pages_th LIKE '%${req.params.slug}%') ORDER BY pages.pages_id ASC;`,
+    `SELECT pages.pages_slug,pages.pages_thumbnail,pages.pages_title,pages.pages_en,pages.pages_th,pages.pages_simple,pages.pages_last_update,pages.pages_type,  pages.pages_sound FROM posts INNER JOIN pages ON posts.pages_id = pages.pages_id where (posts.posts_ep=pages.pages_last_ep AND pages.pages_en LIKE '%${req.params.slug}%') OR (posts.posts_ep=pages.pages_last_ep AND pages.pages_th LIKE '%${req.params.slug}%') ORDER BY pages.pages_id ASC;`,
     async (err, result) => {
       try {
         if (err) {
@@ -211,7 +211,7 @@ router.get("/pages/:slug", async (req, res) => {
                           pages.pages_slug, pages.pages_view, pages.pages_last_update, pages.pages_status_showing,
                           pages.pages_last_ep, pages.pages_en, pages.pages_th, pages.pages_star,
                           pages.pages_type, pages.pages_follow, pages.pages_publish, pages.pages_title,
-                          pages.pages_simple, pages.pages_thumbnail, pages.pages_description
+                          pages.pages_simple, pages.pages_thumbnail, pages.pages_description,  pages.pages_sound
                       FROM 
                           posts
                       INNER JOIN
@@ -275,7 +275,7 @@ router.get("/posts/:slug", async (req, res) => {
     console.log("found");
   } else {
     pool.query(
-      `SELECT pages.pages_slug,pages.pages_en,pages.pages_th,pages.pages_status_showing,posts.posts_slug,posts.posts_ep,posts.posts_detail FROM posts INNER JOIN pages ON posts.pages_id = pages.pages_id WHERE posts.posts_slug = ? ;`,
+      `SELECT   pages.pages_sound,pages.pages_slug,pages.pages_en,pages.pages_th,pages.pages_status_showing,posts.posts_slug,posts.posts_ep,posts.posts_detail FROM posts INNER JOIN pages ON posts.pages_id = pages.pages_id WHERE posts.posts_slug = ? ;`,
       [req.params.slug],
       async (err, result_posts) => {
         try {
@@ -307,7 +307,7 @@ router.get("/tags/:slug", async (req, res) => {
     console.log("found");
   } else {
     pool.query(
-      "SELECT pages.pages_slug,pages.pages_thumbnail,pages.pages_title,pages.pages_en,pages.pages_last_update,pages.pages_type,pages.pages_last_ep,posts.posts_slug,tags.tags_slug,tags.tags_name FROM posts INNER JOIN pages ON posts.pages_id = pages.pages_id INNER JOIN pages_tags ON pages.pages_id = pages_tags.pages_id INNER JOIN tags ON pages_tags.tags_id=tags.tags_id  where posts.posts_ep=pages.pages_last_ep and tags.tags_slug='action' ORDER BY pages.pages_last_update DESC;",
+      "SELECT  pages.pages_sound,pages.pages_slug,pages.pages_thumbnail,pages.pages_title,pages.pages_en,pages.pages_last_update,pages.pages_type,pages.pages_last_ep,posts.posts_slug,tags.tags_slug,tags.tags_name FROM posts INNER JOIN pages ON posts.pages_id = pages.pages_id INNER JOIN pages_tags ON pages.pages_id = pages_tags.pages_id INNER JOIN tags ON pages_tags.tags_id=tags.tags_id  where posts.posts_ep=pages.pages_last_ep and tags.tags_slug='action' ORDER BY pages.pages_last_update DESC;",
       [req.params.slug],
       async (err, result) => {
         try {
@@ -411,7 +411,7 @@ async function Update_view(slug) {
 async function getLastUpdatedReload() {
   let redis_key = "9tailanime:public:last_updated";
   pool.query(
-    "SELECT pages.pages_slug,pages.pages_thumbnail,pages.pages_title,pages.pages_en,pages.pages_last_update,pages.pages_type,pages.pages_last_ep,posts.posts_slug FROM posts INNER JOIN pages ON posts.pages_id = pages.pages_id where posts.posts_ep=pages.pages_last_ep ORDER BY pages.pages_last_update DESC LIMIT 100;",
+    "SELECT  pages.pages_sound,pages.pages_slug,pages.pages_thumbnail,pages.pages_title,pages.pages_en,pages.pages_last_update,pages.pages_type,pages.pages_last_ep,posts.posts_slug FROM posts INNER JOIN pages ON posts.pages_id = pages.pages_id where posts.posts_ep=pages.pages_last_ep ORDER BY pages.pages_last_update DESC LIMIT 100;",
     async (err, result) => {
       try {
         if (err) {
@@ -434,7 +434,7 @@ async function getLastUpdatedReload() {
 async function getTagsPopular() {
   let redis_key = `9tailanime:public:tags/popular`;
   pool.query(
-    "SELECT pages.pages_slug,pages.pages_simple,pages.pages_thumbnail,pages.pages_title,pages.pages_en,pages.pages_th,pages.pages_last_update,pages.pages_type,pages.pages_last_ep,posts.posts_slug,tags.tags_slug,tags.tags_name FROM posts INNER JOIN pages ON posts.pages_id = pages.pages_id INNER JOIN pages_tags ON pages.pages_id = pages_tags.pages_id INNER JOIN tags ON pages_tags.tags_id=tags.tags_id  where posts.posts_ep=pages.pages_last_ep and tags.tags_slug=? ORDER BY pages.pages_last_update DESC;",
+    "SELECT  pages.pages_sound,pages.pages_slug,pages.pages_simple,pages.pages_thumbnail,pages.pages_title,pages.pages_en,pages.pages_th,pages.pages_last_update,pages.pages_type,pages.pages_last_ep,posts.posts_slug,tags.tags_slug,tags.tags_name FROM posts INNER JOIN pages ON posts.pages_id = pages.pages_id INNER JOIN pages_tags ON pages.pages_id = pages_tags.pages_id INNER JOIN tags ON pages_tags.tags_id=tags.tags_id  where posts.posts_ep=pages.pages_last_ep and tags.tags_slug=? ORDER BY pages.pages_last_update DESC;",
     ["popular"],
     async (err, result) => {
       try {
